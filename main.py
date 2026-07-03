@@ -1,3 +1,4 @@
+import os
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, ContextTypes, filters
 import requests
@@ -15,7 +16,8 @@ def home():
     return "Bot ishlayapti"
 
 def run_flask():
-    flask_app.run(host='0.0.0.0', port=8080)
+    port = int(os.environ.get("PORT", 8080))
+    flask_app.run(host='0.0.0.0', port=port)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Salom! Men aqlli yordamchiman. Menga xabar yozing.")
