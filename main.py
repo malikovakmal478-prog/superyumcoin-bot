@@ -6,8 +6,8 @@ from flask import Flask
 from threading import Thread
 
 TELEGRAM_TOKEN = "8321842423:AAHsI1cxehoKEKLKjE7ZmM0xOoLoqClq4wc"
-GEMINI_API_KEY = "AQ.Ab8RN6Kn8N_oKbu5ikS7wzhAzpCzoECEP-EEBwL9RWDU7WZBZw"
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+GEMINI_API_KEY = "AQ.Ab8RN6LFepA3CXmW60oTbxSLIT3_QpodT-ZpVW56vD8gAO8WpQ"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
 
 flask_app = Flask('')
 
@@ -25,7 +25,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     try:
-        headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
+        headers = {"X-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
         payload = {"contents": [{"parts": [{"text": f"Siz aqlli o'zbek tilidagi yordamchisiz. Foydalanuvchi savoli: {text}"}]}]}
         r = requests.post(GEMINI_URL, headers=headers, json=payload, timeout=30)
         data = r.json()
