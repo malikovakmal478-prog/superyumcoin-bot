@@ -5,8 +5,8 @@ import requests
 from flask import Flask
 from threading import Thread
 
-TELEGRAM_TOKEN = "8321842423:AAHsI1cxehoKEKLKjE7ZmM0xOoLoqClq4wc"
-GEMINI_API_KEY = "AQ.Ab8RN6LFepA3CXmW60oTbxSLIT3_QpodT-ZpVW56vD8gAO8WpQ"
+TELEGRAM_TOKEN = "8321842423:AAG104h9Hz5V5N-4DysVGmrj4O0LMoVba00"
+GEMINI_API_KEY = "AQ.Ab8RN6JNmviGc4BgJ1MsYTNWAuvvBmrYG7cmRwgRPeJ5o9tf-g"
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
 
 flask_app = Flask('')
