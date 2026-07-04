@@ -2,13 +2,15 @@ import os
 import asyncio
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, ContextTypes, filters
-import requests
+import google.generativeai as genai
 from flask import Flask
 from threading import Thread
 
 TELEGRAM_TOKEN = "8321842423:AAG104h9Hz5V5N-4DysVGmrj4O0LMoVba00"
 GEMINI_API_KEY = "AQ.Ab8RN6IHy4HWabNsntF4X55Kw3jqryQwSnyZntvv9617PJ8ULg"
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel("gemini-flash-latest")
 
 flask_app = Flask('')
 
@@ -26,15 +28,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     try:
-        headers = {
-            "Content-Type": "application/json",
-            "X-goog-api-key": GEMINI_API_KEY
-        }
-        payload = {"contents": [{"parts": [{"text": f"Siz aqlli o'zbek tilidagi yordamchisiz. Foydalanuvchi savoli: {text}"}]}]}
-        r = requests.post(GEMINI_URL, headers=headers, json=payload, timeout=30)
-        data = r.json()
-        reply = data["candidates"][0]["content"]["parts"][0]["text"] if "candidates" in data else f"API javobi: {data}"
-        await update.message.reply_text(reply)
+        response = model.generate_content(f"Siz aqlli o'zbek tilidagi yordamchisiz. Foydalanuvchi savoli: {text}")
+        await update.message.reply_text(response.text)
     except Exception as e:
         await update.message.reply_text(f"Xatolik yuz berdi: {e}")
 
