@@ -1,4 +1,5 @@
 import os
+import asyncio
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, ContextTypes, filters
 import requests
@@ -34,11 +35,21 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"Xatolik yuz berdi: {e}")
 
-Thread(target=run_flask).start()
+def main():
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
-app = Application.builder().token(TELEGRAM_TOKEN).build()
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+    Thread(target=run_flask, daemon=True).start()
 
-print("Bot ishga tushdi...")
-app.run_polling()
+    app = Application.builder().token(TELEGRAM_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+
+    print("Bot ishga tushdi...")
+    app.run_polling()
+
+if __name__ == '__main__':
+    main()
