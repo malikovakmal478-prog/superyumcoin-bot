@@ -10,6 +10,15 @@ TELEGRAM_TOKEN = "8321842423:AAG104h9Hz5V5N-4DysVGmrj4O0LMoVba00"
 OPENROUTER_API_KEY = "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"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
+SYSTEM_PROMPT = (
+    "Siz do'stona, foydali o'zbek tilidagi AI yordamchisiz. "
+    "Foydalanuvchining savollariga aniq, tushunarli va samimiy javob bering. "
+    "Sog'liq bilan bog'liq savollarga umumiy, foydali ma'lumot bering. "
+    "Agar savol jiddiy shoshilinch tibbiy holatga (masalan insult, yurak xurujiga) "
+    "o'xshasa, foydalanuvchiga darhol 103 raqamiga qo'ng'iroq qilishni maslahat bering, "
+    "lekin savolni e'tiborsiz qoldirmang - avval qisqa tushuntirish bering, keyin tez yordamga murojaat qilishni tavsiya qiling."
+)
+
 flask_app = Flask('')
 
 @flask_app.route('/')
@@ -33,7 +42,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         payload = {
             "model": "meta-llama/llama-3.1-8b-instruct",
             "messages": [
-                {"role": "system", "content": "Siz aqlli o'zbek tilidagi yordamchisiz."},
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": text}
             ]
         }
