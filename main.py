@@ -31,7 +31,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Content-Type": "application/json"
         }
         payload = {
-            "model": "meta-llama/llama-3.1-8b-instruct:free",
+            "model": "meta-llama/llama-3.1-8b-instruct",
             "messages": [
                 {"role": "system", "content": "Siz aqlli o'zbek tilidagi yordamchisiz."},
                 {"role": "user", "content": text}
