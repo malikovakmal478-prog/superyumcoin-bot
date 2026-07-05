@@ -2,15 +2,13 @@ import os
 import asyncio
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, ContextTypes, filters
-import google.generativeai as genai
+import requests
 from flask import Flask
 from threading import Thread
 
 TELEGRAM_TOKEN = "8321842423:AAG104h9Hz5V5N-4DysVGmrj4O0LMoVba00"
-GEMINI_API_KEY = "AQ.Ab8RN6IHy4HWabNsntF4X55Kw3jqryQwSnyZntvv9617PJ8ULg"
-
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-flash-latest")
+OPENROUTER_API_KEY = "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"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 flask_app = Flask('')
 
@@ -28,8 +26,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     try:
-        response = model.generate_content(f"Siz aqlli o'zbek tilidagi yordamchisiz. Foydalanuvchi savoli: {text}")
-        await update.message.reply_text(response.text)
+        headers = {
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": "meta-llama/llama-3.1-8b-instruct:free",
+            "messages": [
+                {"role": "system", "content": "Siz aqlli o'zbek tilidagi yordamchisiz."},
+                {"role": "user", "content": text}
+            ]
+        }
+        r = requests.post(OPENROUTER_URL, headers=headers, json=payload, timeout=30)
+        data = r.json()
+        reply = data["choices"][0]["message"]["content"] if "choices" in data else f"API javobi: {data}"
+        await update.message.reply_text(reply)
     except Exception as e:
         await update.message.reply_text(f"Xatolik yuz berdi: {e}")
 
